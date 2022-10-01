@@ -1,7 +1,7 @@
 import 'package:firebase_core/firebase_core.dart';
-import 'package:firebaseaut/controller/authentication_login_provider.dart';
-import 'package:firebaseaut/controller/authentication_signin_provider.dart';
-import 'package:firebaseaut/view/login_page.dart';
+import 'package:firebaseaut/screens/login/controller/authentication_login_provider.dart';
+import 'package:firebaseaut/screens/login/controller/authentication_registration_provider.dart';
+import 'package:firebaseaut/screens/login/view/screen_dashboard.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -12,11 +12,15 @@ void main() async {
     MultiProvider(
       providers: [
         ChangeNotifierProvider(
-          create: (context) => FirebaseAuthSignInProvider(),
+          create: (context) => FirebaseAuthLogInProvider(),
         ),
         ChangeNotifierProvider(
-          create: (context) => FirebaseAuthLogInProvider(),
-        )
+          create: (context) => FirebaseAuthSignUPProvider(),
+        ),
+        StreamProvider(
+            create: (context) =>
+                context.watch<FirebaseAuthLogInProvider>().straem(),
+            initialData: null)
       ],
       child: const MyApp(),
     ),
@@ -33,7 +37,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: ScreenLogin(),
+      home: const ScreenDashBoard(),
     );
   }
 }

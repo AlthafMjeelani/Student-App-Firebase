@@ -1,4 +1,4 @@
-import 'package:firebaseaut/controller/authentication_signin_provider.dart';
+import 'package:firebaseaut/screens/login/controller/authentication_registration_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -8,12 +8,12 @@ class ScreenUserRegistration extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final data =
-        Provider.of<FirebaseAuthSignInProvider>(context, listen: false);
+        Provider.of<FirebaseAuthSignUPProvider>(context, listen: false);
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      data.emailController.clear();
-      data.passwordController.clear();
-      data.firstNameController.clear();
-      data.secondNameController.clear();
+      data.emailRegController.clear();
+      data.passwordRegController.clear();
+      data.firstNameRegController.clear();
+      data.secondNameRegController.clear();
     });
 
     return Scaffold(
@@ -45,16 +45,12 @@ class ScreenUserRegistration extends StatelessWidget {
                   height: 20,
                 ),
                 TextFormField(
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Please enter some text';
-                    }
-                    return null;
-                  },
-                  controller: data.firstNameController,
+                  validator: (value) =>
+                      data.validation(value, 'Enter your Name'),
+                  controller: data.firstNameRegController,
                   decoration: InputDecoration(
                     label: const Text('First Name'),
-                    prefixIcon: const Icon(Icons.text_decrease_outlined),
+                    prefixIcon: const Icon(Icons.abc),
                     border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(10)),
                   ),
@@ -63,16 +59,13 @@ class ScreenUserRegistration extends StatelessWidget {
                   height: 20,
                 ),
                 TextFormField(
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Please enter some text';
-                    }
-                    return null;
-                  },
-                  controller: data.secondNameController,
+                  keyboardType: TextInputType.number,
+                  validator: (value) =>
+                      data.validation(value, 'Enter your Age'),
+                  controller: data.secondNameRegController,
                   decoration: InputDecoration(
-                    label: const Text('Second Name'),
-                    prefixIcon: const Icon(Icons.text_decrease_outlined),
+                    label: const Text('Age'),
+                    prefixIcon: const Icon(Icons.numbers),
                     border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(10)),
                   ),
@@ -81,13 +74,10 @@ class ScreenUserRegistration extends StatelessWidget {
                   height: 20,
                 ),
                 TextFormField(
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Please enter some text';
-                    }
-                    return null;
-                  },
-                  controller: data.emailController,
+                  keyboardType: TextInputType.emailAddress,
+                  validator: (value) =>
+                      data.validation(value, 'Enter your Email'),
+                  controller: data.emailRegController,
                   decoration: InputDecoration(
                     label: const Text('Email Id'),
                     prefixIcon: const Icon(Icons.email_outlined),
@@ -99,16 +89,9 @@ class ScreenUserRegistration extends StatelessWidget {
                   height: 20,
                 ),
                 TextFormField(
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Please enter some text';
-                    }
-                    if (value.length < 6) {
-                      return 'Please enter Atleast 6 Cheracter';
-                    }
-                    return null;
-                  },
-                  controller: data.passwordController,
+                  validator: (value) =>
+                      data.validation(value, 'Enter your Password'),
+                  controller: data.passwordRegController,
                   obscureText: true,
                   decoration: InputDecoration(
                     prefixIcon: const Icon(Icons.password_outlined),
@@ -123,8 +106,8 @@ class ScreenUserRegistration extends StatelessWidget {
                 TextButton.icon(
                   onPressed: () async {
                     if (data.formKeySignIn.currentState!.validate()) {
-                      await data.createUserAccount(data.emailController.text,
-                          data.passwordController.text, context);
+                      await data.createUserAccount(data.emailRegController.text,
+                          data.passwordRegController.text, context);
                     }
                   },
                   icon: const Icon(Icons.app_registration_rounded),
