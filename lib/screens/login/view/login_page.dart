@@ -1,5 +1,5 @@
-import 'package:firebaseaut/login/view/user_registration_page.dart';
 import 'package:firebaseaut/screens/login/controller/authentication_login_provider.dart';
+import 'package:firebaseaut/screens/login/view/user_registration_page.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 

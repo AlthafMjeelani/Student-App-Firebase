@@ -1,8 +1,8 @@
 import 'dart:developer';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebaseaut/screens/home/model/deatails_model.dart';
+import 'package:firebaseaut/screens/login/model/user_model.dart';
 import 'package:firebaseaut/utils/snackbar.dart';
-import 'package:firebaseaut/screens/login/view/screen_dashboard.dart';
+import 'package:firebaseaut/screens/dashboard/view/screen_dashboard.dart';
 import 'package:flutter/material.dart';
 
 import '../view/login_page.dart';
@@ -12,7 +12,7 @@ class FirebaseAuthLogInProvider with ChangeNotifier {
   final TextEditingController passwordController = TextEditingController();
   FirebaseAuth auth = FirebaseAuth.instance;
   Stream<User?> straem() => auth.authStateChanges();
-  DetailsModel? model;
+  UserModel? model;
   final user = FirebaseAuth.instance.currentUser;
 
   bool isLoading = false;

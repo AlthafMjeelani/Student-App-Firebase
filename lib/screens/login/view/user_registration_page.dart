@@ -1,4 +1,7 @@
+import 'package:firebaseaut/screens/dashboard/controller/dashboeard_provider.dart';
 import 'package:firebaseaut/screens/login/controller/authentication_registration_provider.dart';
+import 'package:firebaseaut/utils/core/constent_widget.dart';
+import 'package:firebaseaut/widgets/textfeild_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -12,8 +15,8 @@ class ScreenUserRegistration extends StatelessWidget {
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       data.emailRegController.clear();
       data.passwordRegController.clear();
-      data.firstNameRegController.clear();
-      data.secondNameRegController.clear();
+
+      Provider.of<DashBoardProvider>(context, listen: false).getData();
     });
 
     return Scaffold(
@@ -31,48 +34,18 @@ class ScreenUserRegistration extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                GestureDetector(
-                  onTap: () {
-                    alertDialog(context);
-                  },
-                  child: const CircleAvatar(
-                    backgroundColor: Colors.black38,
-                    radius: 70,
-                    child: Icon(Icons.image),
-                  ),
-                ),
-                const SizedBox(
-                  height: 20,
-                ),
                 TextFormField(
                   validator: (value) =>
                       data.validation(value, 'Enter your Name'),
-                  controller: data.firstNameRegController,
+                  controller: data.nameRegController,
                   decoration: InputDecoration(
-                    label: const Text('First Name'),
+                    label: const Text('Full Name'),
                     prefixIcon: const Icon(Icons.abc),
                     border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(10)),
                   ),
                 ),
-                const SizedBox(
-                  height: 20,
-                ),
-                TextFormField(
-                  keyboardType: TextInputType.number,
-                  validator: (value) =>
-                      data.validation(value, 'Enter your Age'),
-                  controller: data.secondNameRegController,
-                  decoration: InputDecoration(
-                    label: const Text('Age'),
-                    prefixIcon: const Icon(Icons.numbers),
-                    border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10)),
-                  ),
-                ),
-                const SizedBox(
-                  height: 20,
-                ),
+                ConstentWidget.kWidth20,
                 TextFormField(
                   keyboardType: TextInputType.emailAddress,
                   validator: (value) =>
@@ -85,9 +58,7 @@ class ScreenUserRegistration extends StatelessWidget {
                         borderRadius: BorderRadius.circular(10)),
                   ),
                 ),
-                const SizedBox(
-                  height: 20,
-                ),
+                ConstentWidget.kWidth20,
                 TextFormField(
                   validator: (value) =>
                       data.validation(value, 'Enter your Password'),
@@ -100,9 +71,7 @@ class ScreenUserRegistration extends StatelessWidget {
                         borderRadius: BorderRadius.circular(10)),
                   ),
                 ),
-                const SizedBox(
-                  height: 32,
-                ),
+                ConstentWidget.kWidth32,
                 TextButton.icon(
                   onPressed: () async {
                     if (data.formKeySignIn.currentState!.validate()) {
@@ -120,31 +89,4 @@ class ScreenUserRegistration extends StatelessWidget {
       )),
     );
   }
-}
-
-void alertDialog(context) {
-  showDialog(
-    context: context,
-    builder: (ctx) {
-      return SimpleDialog(
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              TextButton.icon(
-                onPressed: () {},
-                icon: const Icon(Icons.image),
-                label: const Text('Add image'),
-              ),
-              TextButton.icon(
-                onPressed: () {},
-                icon: const Icon(Icons.camera_alt_outlined),
-                label: const Text('Pick image'),
-              )
-            ],
-          ),
-        ],
-      );
-    },
-  );
 }

@@ -1,24 +1,36 @@
 import 'dart:developer';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebaseaut/screens/home/model/deatails_model.dart';
-import 'package:firebaseaut/screens/login/view/screen_dashboard.dart';
+import 'package:firebaseaut/screens/login/model/user_model.dart';
+import 'package:firebaseaut/screens/dashboard/view/screen_dashboard.dart';
 import 'package:flutter/material.dart';
 import '../../../utils/snackbar.dart';
 
 class FirebaseAuthSignUPProvider with ChangeNotifier {
   final TextEditingController emailRegController = TextEditingController();
   final TextEditingController passwordRegController = TextEditingController();
-  final TextEditingController firstNameRegController = TextEditingController();
-  final TextEditingController secondNameRegController = TextEditingController();
+  final TextEditingController nameRegController = TextEditingController();
 
   final formKeySignIn = GlobalKey<FormState>();
-  DetailsModel? model;
+  UserModel? model;
   FirebaseAuth auth = FirebaseAuth.instance;
+  FirebaseFirestore firebaseFirestore = FirebaseFirestore.instance;
 
   Future<void> createUserAccount(String email, String password, context) async {
     try {
-      await auth.createUserWithEmailAndPassword(
-          email: email, password: password);
+      await auth
+          .createUserWithEmailAndPassword(email: email, password: password)
+          .then((value) async {
+        UserModel userModel = UserModel(
+          email: auth.currentUser!.email,
+          name: nameRegController.text,
+        );
+
+        await firebaseFirestore
+            .collection(auth.currentUser!.email.toString())
+            .doc(auth.currentUser!.uid)
+            .set(userModel.toMap());
+      });
       ShowSnackBar()
           .showSnackBar(context, Colors.green, 'New user Creted Successfully');
       navigation(context);
