@@ -1,4 +1,5 @@
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebaseaut/screens/adduser/controller/add_newuser_provider.dart';
 import 'package:firebaseaut/screens/dashboard/controller/dashboeard_provider.dart';
 import 'package:firebaseaut/screens/login/controller/authentication_login_provider.dart';
 import 'package:firebaseaut/screens/login/controller/authentication_registration_provider.dart';
@@ -29,7 +30,10 @@ void main() async {
           create: (context) =>
               context.watch<FirebaseAuthLogInProvider>().straem(),
           initialData: null,
-        )
+        ),
+        ChangeNotifierProvider(
+          create: (context) => AddNewUserProvider(),
+        ),
       ],
       child: const MyApp(),
     ),

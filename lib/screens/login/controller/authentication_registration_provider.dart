@@ -12,7 +12,6 @@ class FirebaseAuthSignUPProvider with ChangeNotifier {
   final TextEditingController nameRegController = TextEditingController();
 
   final formKeySignIn = GlobalKey<FormState>();
-  UserModel? model;
   FirebaseAuth auth = FirebaseAuth.instance;
   FirebaseFirestore firebaseFirestore = FirebaseFirestore.instance;
 

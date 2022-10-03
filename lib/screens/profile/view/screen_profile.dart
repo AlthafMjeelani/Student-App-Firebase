@@ -23,14 +23,15 @@ class ScreenProfile extends StatelessWidget {
   Widget build(BuildContext context) {
     final data = Provider.of<ProfileProvider>(context, listen: false);
     final dashboard = Provider.of<DashBoardProvider>(context, listen: false);
-    data.image = null;
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
       if (dashboard.userModel == null) {
         return;
       } else {
+        data.downloadUrl = null;
         data.nameController.text = dashboard.userModel!.name.toString();
         data.emailController.text = dashboard.userModel!.email.toString();
-        // data.getProfileImage();
+        Provider.of<ProfileProvider>(context, listen: false)
+            .getProfileImage(userId);
       }
     });
     return Scaffold(
@@ -56,72 +57,90 @@ class ScreenProfile extends StatelessWidget {
       body: Padding(
         padding: const EdgeInsets.all(10.0),
         child: SingleChildScrollView(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const SizedBox(
-                height: 30,
-              ),
-              GestureDetector(
-                onTap: () {
-                  alertDialog(context);
-                },
-                child: Consumer(
-                  builder: (BuildContext context, ProfileProvider value,
-                      Widget? child) {
-                    return value.image == null
-                        ? const CircleAvatar(
-                            backgroundColor: Colors.black38,
-                            radius: 70,
-                            child: Icon(Icons.image),
-                          )
-                        : value.downloadUrl != null
-                            ? CircleAvatar(
-                                backgroundImage: NetworkImage(
-                                  value.downloadUrl!,
-                                ),
-                                radius: 70,
-                              )
-                            : CircleAvatar(
-                                backgroundImage:
-                                    FileImage(File(value.image!.path)),
-                                radius: 70,
-                              );
-                  },
+          child: Form(
+            key: data.formKey,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const SizedBox(
+                  height: 30,
                 ),
-              ),
-              ConstentWidget.kWidth32,
-              Textfeildwidget(
-                readOnly: false,
-                validator: (value) {},
-                text: 'Enter Name',
-                icon: Icons.abc,
-                controller: data.nameController,
-              ),
-              ConstentWidget.kWidth20,
-              Textfeildwidget(
-                readOnly: true,
-                validator: (value) {},
-                text: 'Enter emailid',
-                icon: Icons.abc,
-                controller: data.emailController,
-              ),
-              ConstentWidget.kWidth32,
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  TextButton.icon(
-                    onPressed: () async {
-                      await data.submitUpdate(userId, context);
-                      await dashboard.getData();
-                    },
-                    icon: const Icon(Icons.app_registration_rounded),
-                    label: const Text('Save'),
+                GestureDetector(
+                  onTap: () {
+                    alertDialog(context);
+                  },
+                  child: Stack(
+                    children: [
+                      Consumer<ProfileProvider>(
+                        builder: (BuildContext context, ProfileProvider value,
+                            Widget? child) {
+                          return value.image == null
+                              ? const CircleAvatar(
+                                  backgroundColor: Colors.black38,
+                                  radius: 70,
+                                  child: Icon(Icons.image),
+                                )
+                              : value.downloadUrl == null
+                                  ? CircleAvatar(
+                                      backgroundImage: FileImage(
+                                        File(value.image!.path),
+                                      ),
+                                      radius: 70,
+                                    )
+                                  : CircleAvatar(
+                                      backgroundImage: NetworkImage(
+                                        value.downloadUrl!,
+                                      ),
+                                      radius: 70,
+                                    );
+                        },
+                      ),
+                      const Padding(
+                        padding: EdgeInsets.only(top: 110.0, left: 100),
+                        child: Icon(
+                          Icons.camera_alt_outlined,
+                          size: 32,
+                        ),
+                      )
+                    ],
                   ),
-                ],
-              ),
-            ],
+                ),
+                ConstentWidget.kWidth32,
+                Textfeildwidget(
+                  readOnly: false,
+                  validator: (value) =>
+                      data.validation(value, "Enter Your Name"),
+                  text: 'Enter Name',
+                  icon: Icons.abc,
+                  controller: data.nameController,
+                ),
+                ConstentWidget.kWidth20,
+                Textfeildwidget(
+                  readOnly: true,
+                  validator: (value) {
+                    return;
+                  },
+                  text: 'Enter emailid',
+                  icon: Icons.abc,
+                  controller: data.emailController,
+                ),
+                ConstentWidget.kWidth32,
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    TextButton.icon(
+                      onPressed: () async {
+                        await data.submitUpdate(userId, context);
+                        await dashboard.getData();
+                      },
+                      icon: const Icon(Icons.app_registration_rounded),
+                      label: const Text('Save'),
+                    ),
+                  ],
+                ),
+              ],
+            ),
           ),
         ),
       ),

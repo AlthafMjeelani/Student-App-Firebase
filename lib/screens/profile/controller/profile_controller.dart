@@ -9,9 +9,6 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 
 class ProfileProvider with ChangeNotifier {
-  ProfileProvider() {
-    //getProfileImage();
-  }
   final TextEditingController nameController = TextEditingController();
   final TextEditingController emailController = TextEditingController();
   final TextEditingController ageController = TextEditingController();
@@ -19,6 +16,7 @@ class ProfileProvider with ChangeNotifier {
   FirebaseAuth auth = FirebaseAuth.instance;
   File? image;
   bool imageVisibility = false;
+  final formKey = GlobalKey<FormState>();
 
   String? downloadUrl;
   Future<void> getImage(ImageSource source) async {
@@ -69,31 +67,44 @@ class ProfileProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  void getProfileImage() async {
-    Reference reference = FirebaseStorage.instance
-        .ref()
-        .child('${auth.currentUser!.email}/images');
-    downloadUrl = await reference.getDownloadURL();
-    notifyListeners();
-    log(downloadUrl!);
+  void getProfileImage(String? userid) async {
+    try {
+      Reference reference =
+          FirebaseStorage.instance.ref().child('$userid/images');
+      downloadUrl = await reference.getDownloadURL();
+      notifyListeners();
+      log(downloadUrl!);
+    } catch (e) {
+      log('getImageException${e.toString()}');
+    }
   }
 
   Future<void> submitUpdate(String? userid, context) async {
-    // if (image != null) {
-    //   await uploeadPick(userid);
-    // } else {
-    //   log('not called');
-    // }
-    UserModel userModel = UserModel(
-      email: auth.currentUser!.email.toString(),
-      name: nameController.text,
-    );
-    await firebaseFirestore
-        .collection(auth.currentUser!.email.toString())
-        .doc(auth.currentUser!.uid)
-        .update(userModel.toMap());
-    notifyListeners();
-    log('submit called');
-    Navigator.pop(context);
+    if (formKey.currentState!.validate()) {
+      if (image != null) {
+        await uploeadPick(userid);
+        notifyListeners();
+      } else {
+        log('not called');
+      }
+      UserModel userModel = UserModel(
+        email: auth.currentUser!.email.toString(),
+        name: nameController.text,
+      );
+      await firebaseFirestore
+          .collection(auth.currentUser!.email.toString())
+          .doc(auth.currentUser!.uid)
+          .update(userModel.toMap());
+      notifyListeners();
+      log('submit called');
+      Navigator.pop(context);
+    }
+  }
+
+  String? validation(value, String text) {
+    if (value == null || value.isEmpty) {
+      return text;
+    }
+    return null;
   }
 }

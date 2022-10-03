@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebaseaut/screens/adduser/controller/add_newuser_provider.dart';
 import 'package:firebaseaut/screens/dashboard/controller/dashboeard_provider.dart';
 import 'package:firebaseaut/screens/login/controller/authentication_login_provider.dart';
 import 'package:firebaseaut/screens/login/view/login_page.dart';
@@ -13,9 +14,11 @@ class ScreenDashBoard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final data = Provider.of<FirebaseAuthLogInProvider>(context, listen: false);
+    final newUser = Provider.of<AddNewUserProvider>(context, listen: false);
     final dash = Provider.of<DashBoardProvider>(context, listen: false);
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       dash.getData();
+      newUser.getAllUsers();
     });
     return StreamBuilder<User?>(
       stream: data.straem(),
@@ -63,6 +66,14 @@ class ScreenDashBoard extends StatelessWidget {
                           mainAxisAlignment: MainAxisAlignment.center,
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
+                            // ListView.separated(
+                            //     itemBuilder:(context, index) {
+                            //       return newUser.getAllUsers();
+                            //     },
+                            //     separatorBuilder: (context, index) {
+                            //       return Divider();
+                            //     },
+                            //     itemCount: )
                             Text(value.userModel?.name ?? "no name"),
                             Text(
                               (value.userModel?.email ?? ""),
