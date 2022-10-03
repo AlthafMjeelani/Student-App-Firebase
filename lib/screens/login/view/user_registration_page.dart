@@ -11,11 +11,12 @@ class ScreenUserRegistration extends StatelessWidget {
   Widget build(BuildContext context) {
     final data =
         Provider.of<FirebaseAuthSignUPProvider>(context, listen: false);
-    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
       data.emailRegController.clear();
+      data.nameRegController.clear();
       data.passwordRegController.clear();
 
-      Provider.of<DashBoardProvider>(context, listen: false).getData();
+      await Provider.of<DashBoardProvider>(context, listen: false).getData();
     });
 
     return Scaffold(

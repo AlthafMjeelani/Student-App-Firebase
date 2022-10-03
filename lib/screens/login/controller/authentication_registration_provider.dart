@@ -18,6 +18,7 @@ class FirebaseAuthSignUPProvider with ChangeNotifier {
 
   Future<void> createUserAccount(String email, String password, context) async {
     try {
+      log('dhafjkadh');
       await auth
           .createUserWithEmailAndPassword(email: email, password: password)
           .then((value) async {
@@ -31,6 +32,7 @@ class FirebaseAuthSignUPProvider with ChangeNotifier {
             .doc(auth.currentUser!.uid)
             .set(userModel.toMap());
       });
+
       ShowSnackBar()
           .showSnackBar(context, Colors.green, 'New user Creted Successfully');
       navigation(context);

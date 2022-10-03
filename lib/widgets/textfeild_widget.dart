@@ -8,6 +8,7 @@ class Textfeildwidget extends StatelessWidget {
     required this.icon,
     required this.controller,
     this.keyboardType,
+    required this.readOnly,
   }) : super(key: key);
 
   final String? Function(String?)? validator;
@@ -15,10 +16,12 @@ class Textfeildwidget extends StatelessWidget {
   final IconData icon;
   final TextEditingController? controller;
   final TextInputType? keyboardType;
+  final bool readOnly;
 
   @override
   Widget build(BuildContext context) {
     return TextFormField(
+      readOnly: readOnly,
       keyboardType: keyboardType,
       validator: validator,
       controller: controller,

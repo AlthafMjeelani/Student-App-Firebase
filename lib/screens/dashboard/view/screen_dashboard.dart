@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebaseaut/screens/dashboard/controller/dashboeard_provider.dart';
 import 'package:firebaseaut/screens/login/controller/authentication_login_provider.dart';
@@ -34,6 +36,7 @@ class ScreenDashBoard extends StatelessWidget {
             actions: [
               IconButton(
                   onPressed: () {
+                    log("nav to dash called");
                     dash.navigationToProfile(context);
                   },
                   icon: const Icon(

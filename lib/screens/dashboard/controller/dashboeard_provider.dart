@@ -46,7 +46,9 @@ class DashBoardProvider with ChangeNotifier {
   void navigationToProfile(context) {
     Navigator.of(context).push(
       MaterialPageRoute(
-        builder: (ctx) => const ScreenProfile(),
+        builder: (ctx) => ScreenProfile(
+          userId: FirebaseAuth.instance.currentUser!.email.toString(),
+        ),
       ),
     );
   }

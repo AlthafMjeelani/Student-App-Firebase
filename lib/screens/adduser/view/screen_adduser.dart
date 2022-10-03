@@ -16,6 +16,7 @@ class ScreenAddUser extends StatelessWidget {
         child: Column(
           children: [
             Textfeildwidget(
+              readOnly: false,
               text: 'First Name',
               icon: Icons.abc,
               controller: dash.firstNameRegController,
@@ -26,6 +27,7 @@ class ScreenAddUser extends StatelessWidget {
               height: 20,
             ),
             Textfeildwidget(
+              readOnly: false,
               keyboardType: TextInputType.number,
               text: 'Age',
               icon: Icons.numbers,
@@ -37,6 +39,7 @@ class ScreenAddUser extends StatelessWidget {
               height: 20,
             ),
             Textfeildwidget(
+              readOnly: false,
               text: 'domain',
               icon: Icons.abc,
               controller: dash.ageRegController,
@@ -47,6 +50,7 @@ class ScreenAddUser extends StatelessWidget {
               height: 20,
             ),
             Textfeildwidget(
+              readOnly: false,
               keyboardType: TextInputType.emailAddress,
               text: 'Mobile Number',
               icon: Icons.numbers,
