@@ -14,7 +14,31 @@ class ScreenProfile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final data = Provider.of<ProfileProvider>(context, listen: false);
+    final dashboard = Provider.of<DashBoardProvider>(context, listen: false);
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      data.nameController.text = dashboard.userModel!.name.toString();
+      data.emailController.text = dashboard.userModel!.email.toString();
+    });
     return Scaffold(
+      appBar: AppBar(
+        actions: [
+          TextButton.icon(
+            onPressed: () async {
+              await data.signOutPage(context);
+            },
+            icon: const Icon(
+              Icons.logout,
+              color: Colors.white,
+            ),
+            label: const Text(
+              'SignOut',
+              style: TextStyle(
+                color: Colors.white,
+              ),
+            ),
+          ),
+        ],
+      ),
       body: Padding(
         padding: const EdgeInsets.all(10.0),
         child: SingleChildScrollView(
@@ -23,7 +47,7 @@ class ScreenProfile extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               const SizedBox(
-                height: 60,
+                height: 30,
               ),
               GestureDetector(
                 onTap: () {
@@ -45,33 +69,19 @@ class ScreenProfile extends StatelessWidget {
                   },
                 ),
               ),
-              ConstentWidget.kWidth20,
+              ConstentWidget.kWidth32,
               Textfeildwidget(
                 validator: (value) {},
-                text: 'text',
+                text: 'Enter Name',
                 icon: Icons.abc,
-                controller: data.ageRegController,
+                controller: data.nameController,
               ),
               ConstentWidget.kWidth20,
               Textfeildwidget(
                 validator: (value) {},
-                text: 'text',
+                text: 'Enter emailid',
                 icon: Icons.abc,
-                controller: data.ageRegController,
-              ),
-              ConstentWidget.kWidth20,
-              Textfeildwidget(
-                validator: (value) {},
-                text: 'text',
-                icon: Icons.abc,
-                controller: data.ageRegController,
-              ),
-              ConstentWidget.kWidth20,
-              Textfeildwidget(
-                validator: (value) {},
-                text: 'text',
-                icon: Icons.abc,
-                controller: data.ageRegController,
+                controller: data.emailController,
               ),
               ConstentWidget.kWidth32,
               Row(
@@ -80,7 +90,7 @@ class ScreenProfile extends StatelessWidget {
                   TextButton.icon(
                     onPressed: () async {},
                     icon: const Icon(Icons.app_registration_rounded),
-                    label: const Text('Register'),
+                    label: const Text('Save'),
                   ),
                 ],
               ),

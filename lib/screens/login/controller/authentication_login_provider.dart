@@ -5,8 +5,6 @@ import 'package:firebaseaut/utils/snackbar.dart';
 import 'package:firebaseaut/screens/dashboard/view/screen_dashboard.dart';
 import 'package:flutter/material.dart';
 
-import '../view/login_page.dart';
-
 class FirebaseAuthLogInProvider with ChangeNotifier {
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
@@ -45,20 +43,6 @@ class FirebaseAuthLogInProvider with ChangeNotifier {
         default:
           log(e.toString());
       }
-    }
-  }
-
-  Future<void> signOutPage(context) async {
-    try {
-      await auth.signOut();
-      Navigator.of(context).pushReplacement(
-        MaterialPageRoute(
-          builder: (ctx) => const ScreenLogin(),
-        ),
-      );
-      log('called');
-    } catch (e) {
-      log(e.toString());
     }
   }
 

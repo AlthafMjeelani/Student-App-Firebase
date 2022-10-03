@@ -1,4 +1,3 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebaseaut/screens/dashboard/controller/dashboeard_provider.dart';
 import 'package:firebaseaut/screens/login/controller/authentication_login_provider.dart';
@@ -26,13 +25,6 @@ class ScreenDashBoard extends StatelessWidget {
           floatingActionButton: FloatingActionButton(
             onPressed: () async {
               dash.navigationToAdd(context);
-              // await FirebaseFirestore.instance
-              //     .collection(
-              //         FirebaseAuth.instance.currentUser!.email.toString())
-              //     .add({
-              //   "name": "shabunew",
-              //   "age": "20",
-              // });
             },
             child: const Icon(Icons.add),
           ),
@@ -51,21 +43,6 @@ class ScreenDashBoard extends StatelessWidget {
                   )),
               const SizedBox(
                 width: 20,
-              ),
-              TextButton.icon(
-                onPressed: () async {
-                  await data.signOutPage(context);
-                },
-                icon: const Icon(
-                  Icons.logout,
-                  color: Colors.white,
-                ),
-                label: const Text(
-                  'SignOut',
-                  style: TextStyle(
-                    color: Colors.white,
-                  ),
-                ),
               ),
             ],
           ),

@@ -1,7 +1,6 @@
 import 'package:firebaseaut/screens/dashboard/controller/dashboeard_provider.dart';
 import 'package:firebaseaut/screens/login/controller/authentication_registration_provider.dart';
 import 'package:firebaseaut/utils/core/constent_widget.dart';
-import 'package:firebaseaut/widgets/textfeild_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 

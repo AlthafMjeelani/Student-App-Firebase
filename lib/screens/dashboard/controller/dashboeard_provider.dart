@@ -4,7 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebaseaut/screens/profile/view/screen_profile.dart';
 import 'package:firebaseaut/screens/login/model/user_model.dart';
-import 'package:firebaseaut/screens/dashboard/view/screen_adduser.dart';
+import 'package:firebaseaut/screens/adduser/view/screen_adduser.dart';
 import 'package:flutter/material.dart';
 
 class DashBoardProvider with ChangeNotifier {
