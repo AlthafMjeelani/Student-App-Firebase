@@ -14,7 +14,6 @@ class ScreenDashBoard extends StatelessWidget {
     final dash = Provider.of<DashBoardProvider>(context, listen: false);
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       dash.getData();
-      newUser.getAllUsers();
     });
 
     return Scaffold(
@@ -43,65 +42,52 @@ class ScreenDashBoard extends StatelessWidget {
           ),
         ],
       ),
-      body: Center(
-        child: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Consumer<DashBoardProvider>(
-            builder:
-                (BuildContext context, DashBoardProvider value, Widget? child) {
-              return value.userModel == null
-                  ? const Center(
-                      child: CupertinoActivityIndicator(
-                        color: Colors.cyan,
-                      ),
-                    )
-                  : Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Text(value.userModel?.name ?? "no name"),
-                        Text(
-                          (value.userModel?.email ?? ""),
-                        ),
-                        const SizedBox(
-                          height: 50,
-                        ),
-                        Consumer<AddNewUserProvider>(
-                          builder: (BuildContext context,
-                              AddNewUserProvider value, Widget? child) {
-                            return value.detailsModel == null
-                                ? const Center(
-                                    child: Text('No Data'),
-                                  )
-                                : ListView.separated(
-                                    itemBuilder: (context, index) {
-                                      return ListTile(
-                                        leading: const CircleAvatar(
-                                          radius: 30,
-                                        ),
-                                        title: Text(value.detailsModel!.name
-                                            .toString()),
-                                        trailing: IconButton(
-                                          onPressed: () {},
-                                          icon: const Icon(Icons.delete),
-                                          color: Colors.red,
-                                        ),
-                                        onTap: () {},
-                                      );
-                                    },
-                                    separatorBuilder: (context, index) {
-                                      return const Divider();
-                                    },
-                                    itemCount: value.detailsModel!.name!.length,
-                                  );
+      body: dash.isLoading
+          ? const Center(
+              child: CupertinoActivityIndicator(
+                color: Colors.cyan,
+              ),
+            )
+          : Padding(
+              padding: const EdgeInsets.all(2.0),
+              child: Column(
+                children: [
+                  StreamBuilder(
+                      stream: newUser.fetchAllStudents(),
+                      builder: (context, snapshot) {
+                        if (snapshot.connectionState ==
+                            ConnectionState.waiting) {
+                          return const Center(
+                            child: CupertinoActivityIndicator(
+                              color: Colors.cyan,
+                            ),
+                          );
+                        } else if (snapshot.data!.isEmpty) {
+                          return const Center(
+                            child: Text("No students"),
+                          );
+                        }
+                        return ListView.separated(
+                          scrollDirection: Axis.vertical,
+                          shrinkWrap: true,
+                          itemCount: snapshot.data!.length,
+                          itemBuilder: ((context, index) {
+                            final student = snapshot.data![index];
+                            return ListTile(
+                              leading: const CircleAvatar(
+                                radius: 30,
+                              ),
+                              title: Text(student.name.toString()),
+                            );
+                          }),
+                          separatorBuilder: (BuildContext context, int index) {
+                            return const Divider();
                           },
-                        ),
-                      ],
-                    );
-            },
-          ),
-        ),
-      ),
+                        );
+                      }),
+                ],
+              ),
+            ),
     );
   }
 }

@@ -9,6 +9,7 @@ class Textfeildwidget extends StatelessWidget {
     required this.controller,
     this.keyboardType,
     required this.readOnly,
+    this.suffixIcon,
   }) : super(key: key);
 
   final String? Function(String?)? validator;
@@ -17,10 +18,12 @@ class Textfeildwidget extends StatelessWidget {
   final TextEditingController? controller;
   final TextInputType? keyboardType;
   final bool readOnly;
+  final Widget? suffixIcon;
 
   @override
   Widget build(BuildContext context) {
     return TextFormField(
+      autovalidateMode: AutovalidateMode.onUserInteraction,
       readOnly: readOnly,
       keyboardType: keyboardType,
       validator: validator,
@@ -28,6 +31,7 @@ class Textfeildwidget extends StatelessWidget {
       decoration: InputDecoration(
         label: Text(text),
         prefixIcon: Icon(icon),
+        suffixIcon: suffixIcon,
         border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
       ),
     );

@@ -24,9 +24,9 @@ class FirebaseAuthSignUPProvider with ChangeNotifier {
           .createUserWithEmailAndPassword(email: email, password: password)
           .then((value) async {
         UserModel userModel = UserModel(
-          email: auth.currentUser!.email,
-          name: nameRegController.text,
-        );
+            email: auth.currentUser!.email,
+            name: nameRegController.text,
+            mob: 'No Mobile Number');
 
         await firebaseFirestore
             .collection(auth.currentUser!.email.toString())

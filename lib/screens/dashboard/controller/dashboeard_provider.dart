@@ -10,10 +10,13 @@ import 'package:flutter/material.dart';
 class DashBoardProvider with ChangeNotifier {
   final TextEditingController firstNameRegController = TextEditingController();
   final TextEditingController ageRegController = TextEditingController();
-
+  bool _isLoading = false;
+  bool get isLoading => _isLoading;
   UserModel? userModel;
   Future<void> getData() async {
     try {
+      _isLoading = true;
+      notifyListeners();
       await FirebaseFirestore.instance
           .collection(FirebaseAuth.instance.currentUser!.email.toString())
           .doc(FirebaseAuth.instance.currentUser!.uid)
@@ -22,6 +25,7 @@ class DashBoardProvider with ChangeNotifier {
         userModel = UserModel.fromMap(value.data()!);
         log(userModel.toString());
       });
+      _isLoading = false;
       notifyListeners();
     } catch (e) {
       log(e.toString());

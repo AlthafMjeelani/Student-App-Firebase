@@ -11,14 +11,15 @@ import 'package:image_picker/image_picker.dart';
 class ProfileProvider with ChangeNotifier {
   final TextEditingController nameController = TextEditingController();
   final TextEditingController emailController = TextEditingController();
-  final TextEditingController ageController = TextEditingController();
+  final TextEditingController mobController = TextEditingController();
   FirebaseFirestore firebaseFirestore = FirebaseFirestore.instance;
   FirebaseAuth auth = FirebaseAuth.instance;
   File? image;
-  bool imageVisibility = false;
   final formKey = GlobalKey<FormState>();
   bool _isLoading = false;
   bool get isLoading => _isLoading;
+
+  bool isEditing = false;
   String? downloadUrl;
   Future<void> getImage(ImageSource source) async {
     final pikImage = await ImagePicker().pickImage(
@@ -32,16 +33,6 @@ class ProfileProvider with ChangeNotifier {
       notifyListeners();
       log("image picked ");
     }
-  }
-
-  void isVisible(img) {
-    if (img == null) {
-      imageVisibility = true;
-    } else {
-      imageVisibility = false;
-    }
-
-    notifyListeners();
   }
 
   Future<void> signOutPage(context) async {
@@ -89,24 +80,23 @@ class ProfileProvider with ChangeNotifier {
 
   Future<void> submitUpdate(String? userid, context) async {
     if (formKey.currentState!.validate()) {
-      _isLoading = true;
-      notifyListeners();
       if (image != null) {
         await uploeadPick(userid);
-        notifyListeners();
       } else {
         log('not called');
       }
+      _isLoading = true;
+      notifyListeners();
       UserModel userModel = UserModel(
-        email: auth.currentUser!.email.toString(),
-        name: nameController.text,
-      );
+          email: auth.currentUser!.email.toString(),
+          name: nameController.text,
+          mob: mobController.text);
       await firebaseFirestore
           .collection(auth.currentUser!.email.toString())
           .doc(auth.currentUser!.uid)
           .update(userModel.toMap());
       _isLoading = false;
-      notifyListeners();
+      isEditing = false;
       notifyListeners();
       log('submit called');
       //  Navigator.pop(context);
@@ -116,6 +106,13 @@ class ProfileProvider with ChangeNotifier {
   String? validation(value, String text) {
     if (value == null || value.isEmpty) {
       return text;
+    }
+    return null;
+  }
+
+  String? phoneValidation(String? value) {
+    if (value == null || value.isEmpty || value.length != 10) {
+      return 'please enter 10 numbers';
     }
     return null;
   }

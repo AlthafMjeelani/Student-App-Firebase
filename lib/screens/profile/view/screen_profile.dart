@@ -6,7 +6,6 @@ import 'package:firebaseaut/utils/core/constent_widget.dart';
 import 'package:firebaseaut/widgets/textfeild_widget.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 
 class ScreenProfile extends StatelessWidget {
@@ -26,9 +25,11 @@ class ScreenProfile extends StatelessWidget {
       } else {
         data.nameController.text = dashboard.userModel!.name.toString();
         data.emailController.text = dashboard.userModel!.email.toString();
+        // data.mobController.text = dashboard.userModel!.mob.toString();
         Provider.of<ProfileProvider>(context, listen: false)
             .getProfileImage(userId);
         data.image = null;
+        data.isEditing = false;
       }
     });
     return Scaffold(
@@ -66,7 +67,8 @@ class ScreenProfile extends StatelessWidget {
                             padding: EdgeInsets.only(left: 30, top: 20),
                             child: CupertinoActivityIndicator(
                               color: Colors.cyan,
-                            ))
+                            ),
+                          )
                         : GestureDetector(
                             onTap: () {
                               SimpleDialogWidget.alertDialog(context);
@@ -75,10 +77,24 @@ class ScreenProfile extends StatelessWidget {
                               children: [
                                 value.image == null
                                     ? value.downloadUrl == null
-                                        ? const CircleAvatar(
+                                        ? CircleAvatar(
                                             backgroundColor: Colors.black38,
                                             radius: 70,
-                                            child: Icon(Icons.image),
+                                            child: TextButton.icon(
+                                              onPressed: () {
+                                                SimpleDialogWidget.alertDialog(
+                                                    context);
+                                              },
+                                              icon: const Icon(
+                                                Icons.image,
+                                                color: Colors.black,
+                                              ),
+                                              label: const Text(
+                                                'No Image',
+                                                style: TextStyle(
+                                                    color: Colors.black),
+                                              ),
+                                            ),
                                           )
                                         : CircleAvatar(
                                             backgroundImage: NetworkImage(
@@ -113,6 +129,30 @@ class ScreenProfile extends StatelessWidget {
                   text: 'Enter Name',
                   icon: Icons.abc,
                   controller: data.nameController,
+                  suffixIcon: IconButton(
+                    onPressed: () {
+                      data.isEditing = true;
+                    },
+                    icon: const Icon(Icons.edit),
+                  ),
+                ),
+                ConstentWidget.kWidth20,
+                Textfeildwidget(
+                  keyboardType: TextInputType.phone,
+                  readOnly: false,
+                  validator: (value) => data.phoneValidation(value),
+                  text:
+                      dashboard.userModel!.mob.toString() != 'No Mobile Number'
+                          ? 'Mobile Number'
+                          : 'No Mobile Number',
+                  icon: Icons.abc,
+                  controller: data.mobController,
+                  suffixIcon: IconButton(
+                    onPressed: () {
+                      data.isEditing = true;
+                    },
+                    icon: const Icon(Icons.edit),
+                  ),
                 ),
                 ConstentWidget.kWidth20,
                 Textfeildwidget(
@@ -120,7 +160,7 @@ class ScreenProfile extends StatelessWidget {
                   validator: (value) {
                     return;
                   },
-                  text: 'Enter emailid',
+                  text: 'email id',
                   icon: Icons.abc,
                   controller: data.emailController,
                 ),
@@ -137,7 +177,6 @@ class ScreenProfile extends StatelessWidget {
                             : TextButton.icon(
                                 onPressed: () async {
                                   await data.submitUpdate(userId, context);
-                                  await dashboard.getData();
                                 },
                                 icon:
                                     const Icon(Icons.app_registration_rounded),

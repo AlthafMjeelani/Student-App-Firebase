@@ -14,13 +14,14 @@ class ScreenSplash extends StatelessWidget {
   Widget build(BuildContext context) {
     final data = Provider.of<FirebaseAuthLogInProvider>(context, listen: false);
     return StreamBuilder<User?>(
-        stream: data.straem(),
-        builder: (context, snapshot) {
-          if (!snapshot.hasData) {
-            return const ScreenLogin();
-          } else {
-            return const ScreenDashBoard();
-          }
-        });
+      stream: data.straem(),
+      builder: (context, snapshot) {
+        if (!snapshot.hasData) {
+          return const ScreenLogin();
+        } else {
+          return const ScreenDashBoard();
+        }
+      },
+    );
   }
 }

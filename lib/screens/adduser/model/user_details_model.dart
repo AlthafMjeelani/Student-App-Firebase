@@ -12,10 +12,10 @@ class DetailsModel {
 
   factory DetailsModel.fromMap(Map<String, dynamic> map) {
     return DetailsModel(
-      name: map['name'],
-      age: map['age'],
-      domain: map['domain'],
-      mobileNumber: map['mob'],
+      name: map['name'] ?? '',
+      age: map['age'] ?? '',
+      domain: map['domain'] ?? '',
+      mobileNumber: map['mob'] ?? '',
     );
   }
 
