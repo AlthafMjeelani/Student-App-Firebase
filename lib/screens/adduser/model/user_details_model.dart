@@ -10,7 +10,7 @@ class DetailsModel {
     this.mobileNumber,
   });
 
-  factory DetailsModel.fromMap(map) {
+  factory DetailsModel.fromMap(Map<String, dynamic> map) {
     return DetailsModel(
       name: map['name'],
       age: map['age'],

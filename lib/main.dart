@@ -4,6 +4,7 @@ import 'package:firebaseaut/screens/dashboard/controller/dashboeard_provider.dar
 import 'package:firebaseaut/screens/login/controller/authentication_login_provider.dart';
 import 'package:firebaseaut/screens/login/controller/authentication_registration_provider.dart';
 import 'package:firebaseaut/screens/dashboard/view/screen_dashboard.dart';
+import 'package:firebaseaut/screens/login/view/screen_splash.dart';
 import 'package:firebaseaut/screens/profile/controller/profile_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -50,7 +51,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: const ScreenDashBoard(),
+      home: const ScreenSplash(),
     );
   }
 }

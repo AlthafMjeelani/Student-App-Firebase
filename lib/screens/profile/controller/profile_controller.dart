@@ -49,10 +49,11 @@ class ProfileProvider with ChangeNotifier {
     try {
       await auth.signOut();
       downloadUrl = null;
-      Navigator.of(context).pushReplacement(
+      Navigator.of(context).pushAndRemoveUntil(
         MaterialPageRoute(
           builder: (ctx) => const ScreenLogin(),
         ),
+        (route) => false,
       );
       log('called');
     } catch (e) {

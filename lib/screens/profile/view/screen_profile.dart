@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:firebaseaut/screens/dashboard/controller/dashboeard_provider.dart';
 import 'package:firebaseaut/screens/profile/controller/profile_controller.dart';
+import 'package:firebaseaut/utils/alert_dialoge.dart';
 import 'package:firebaseaut/utils/core/constent_widget.dart';
 import 'package:firebaseaut/widgets/textfeild_widget.dart';
 import 'package:flutter/cupertino.dart';
@@ -33,7 +34,7 @@ class ScreenProfile extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         actions: [
-          TextButton.icon(
+          IconButton(
             onPressed: () async {
               await data.signOutPage(context);
               data.image = null;
@@ -41,12 +42,6 @@ class ScreenProfile extends StatelessWidget {
             icon: const Icon(
               Icons.logout,
               color: Colors.white,
-            ),
-            label: const Text(
-              'SignOut',
-              style: TextStyle(
-                color: Colors.white,
-              ),
             ),
           ),
         ],
@@ -74,7 +69,7 @@ class ScreenProfile extends StatelessWidget {
                             ))
                         : GestureDetector(
                             onTap: () {
-                              alertDialog(context);
+                              SimpleDialogWidget.alertDialog(context);
                             },
                             child: Stack(
                               children: [
@@ -159,38 +154,4 @@ class ScreenProfile extends StatelessWidget {
       ),
     );
   }
-}
-
-void alertDialog(context) {
-  final data = Provider.of<ProfileProvider>(context, listen: false);
-  showDialog(
-    context: context,
-    builder: (ctx) {
-      return SimpleDialog(
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              TextButton.icon(
-                onPressed: () async {
-                  await data.getImage(ImageSource.gallery);
-                  Navigator.of(context).pop();
-                },
-                icon: const Icon(Icons.image),
-                label: const Text('Add image'),
-              ),
-              TextButton.icon(
-                onPressed: () async {
-                  data.getImage(ImageSource.camera);
-                  Navigator.of(context).pop();
-                },
-                icon: const Icon(Icons.camera_alt_outlined),
-                label: const Text('Pick image'),
-              )
-            ],
-          ),
-        ],
-      );
-    },
-  );
 }

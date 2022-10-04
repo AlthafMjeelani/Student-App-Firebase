@@ -8,7 +8,7 @@ class ShowSnackBar {
         backgroundColor: color,
         content: Text(text),
         duration: const Duration(
-          seconds: 1,
+          seconds: 2,
         ),
       ),
     );

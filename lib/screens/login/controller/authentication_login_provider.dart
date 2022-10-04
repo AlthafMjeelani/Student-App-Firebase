@@ -1,6 +1,7 @@
 import 'dart:developer';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebaseaut/screens/login/model/user_model.dart';
+import 'package:firebaseaut/screens/login/view/reset_password.dart';
 import 'package:firebaseaut/utils/snackbar.dart';
 import 'package:firebaseaut/screens/dashboard/view/screen_dashboard.dart';
 import 'package:flutter/material.dart';
@@ -8,6 +9,8 @@ import 'package:flutter/material.dart';
 class FirebaseAuthLogInProvider with ChangeNotifier {
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
+  final TextEditingController resetPasswordController = TextEditingController();
+
   FirebaseAuth auth = FirebaseAuth.instance;
   Stream<User?> straem() => auth.authStateChanges();
   UserModel? model;
@@ -60,5 +63,36 @@ class FirebaseAuthLogInProvider with ChangeNotifier {
           builder: (ctx) => const ScreenDashBoard(),
         ),
         (route) => false);
+  }
+
+  void navigationToResetPassword(context) {
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (ctx) => const ScreenResetPassword(),
+      ),
+    );
+  }
+
+  dynamic sentResetPassword(context) async {
+    try {
+      await auth
+          .sendPasswordResetEmail(email: resetPasswordController.text)
+          .then(
+            (value) => Navigator.pop(context),
+          );
+    } on FirebaseAuthException catch (e) {
+      _isLoading = false;
+      notifyListeners();
+      switch (e.code) {
+        case 'user-not-found':
+          return ShowSnackBar().showSnackBar(context, Colors.red,
+              'There is no user record corresponding to this identifier');
+
+        default:
+          log(e.toString());
+      }
+    } catch (e) {
+      log(e.toString());
+    }
   }
 }

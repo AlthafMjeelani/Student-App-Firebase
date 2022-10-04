@@ -52,7 +52,7 @@ class AddNewUserProvider with ChangeNotifier {
           .doc(auth.tenantId)
           .get()
           .then((value) {
-        detailsModel = DetailsModel.fromMap(value.data());
+        detailsModel = DetailsModel.fromMap(value.data()!);
         log(detailsModel.toString());
       });
       notifyListeners();

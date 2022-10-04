@@ -30,7 +30,7 @@ class ScreenLogin extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   const SizedBox(
-                    height: 130,
+                    height: 100,
                   ),
                   const CircleAvatar(
                     radius: 80,
@@ -70,8 +70,19 @@ class ScreenLogin extends StatelessWidget {
                       ),
                     ),
                   ),
-                  const SizedBox(
-                    height: 32,
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      TextButton(
+                        onPressed: () {
+                          data.navigationToResetPassword(context);
+                        },
+                        child: const Text(
+                          'Forget Password?',
+                          style: TextStyle(fontSize: 12),
+                        ),
+                      ),
+                    ],
                   ),
                   Consumer<FirebaseAuthLogInProvider>(
                     builder: (BuildContext context, value, Widget? child) {
@@ -93,7 +104,7 @@ class ScreenLogin extends StatelessWidget {
                     },
                   ),
                   const SizedBox(
-                    height: 200,
+                    height: 170,
                   ),
                   TextButton(
                     onPressed: () {
