@@ -14,6 +14,7 @@ class AddNewUserProvider with ChangeNotifier {
   FirebaseFirestore firebaseFirestore = FirebaseFirestore.instance;
   FirebaseAuth auth = FirebaseAuth.instance;
   DetailsModel? detailsModel;
+  List<DetailsModel> list = [];
   final formKey = GlobalKey<FormState>();
 
   void addNewUser(context) async {
@@ -47,16 +48,16 @@ class AddNewUserProvider with ChangeNotifier {
       await FirebaseFirestore.instance
           .collection(FirebaseAuth.instance.currentUser!.email.toString())
           .doc(FirebaseAuth.instance.currentUser!.uid)
-          .collection(nameController.text)
+          .collection(firebaseFirestore.app.name)
           .doc(auth.tenantId)
           .get()
           .then((value) {
-        detailsModel = DetailsModel.fromMap(value.data()!);
+        detailsModel = DetailsModel.fromMap(value.data());
         log(detailsModel.toString());
       });
       notifyListeners();
     } catch (e) {
-      log(e.toString());
+      log('get all user    ${e.toString()}');
     }
     return null;
   }

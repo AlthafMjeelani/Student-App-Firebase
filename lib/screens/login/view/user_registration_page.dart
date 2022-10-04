@@ -1,6 +1,7 @@
 import 'package:firebaseaut/screens/dashboard/controller/dashboeard_provider.dart';
 import 'package:firebaseaut/screens/login/controller/authentication_registration_provider.dart';
 import 'package:firebaseaut/utils/core/constent_widget.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -72,15 +73,25 @@ class ScreenUserRegistration extends StatelessWidget {
                   ),
                 ),
                 ConstentWidget.kWidth32,
-                TextButton.icon(
-                  onPressed: () async {
-                    if (data.formKeySignIn.currentState!.validate()) {
-                      await data.createUserAccount(data.emailRegController.text,
-                          data.passwordRegController.text, context);
-                    }
+                Consumer<FirebaseAuthSignUPProvider>(
+                  builder: (BuildContext context, value, Widget? child) {
+                    return value.isLoading
+                        ? const CupertinoActivityIndicator(
+                            color: Colors.cyan,
+                          )
+                        : TextButton.icon(
+                            onPressed: () async {
+                              if (data.formKeySignIn.currentState!.validate()) {
+                                await data.createUserAccount(
+                                    data.emailRegController.text,
+                                    data.passwordRegController.text,
+                                    context);
+                              }
+                            },
+                            icon: const Icon(Icons.app_registration_rounded),
+                            label: const Text('Register'),
+                          );
                   },
-                  icon: const Icon(Icons.app_registration_rounded),
-                  label: const Text('Register'),
                 ),
               ],
             ),

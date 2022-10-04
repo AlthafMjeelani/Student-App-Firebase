@@ -10,14 +10,16 @@ class FirebaseAuthSignUPProvider with ChangeNotifier {
   final TextEditingController emailRegController = TextEditingController();
   final TextEditingController passwordRegController = TextEditingController();
   final TextEditingController nameRegController = TextEditingController();
-
+  bool _isLoading = false;
+  bool get isLoading => _isLoading;
   final formKeySignIn = GlobalKey<FormState>();
   FirebaseAuth auth = FirebaseAuth.instance;
   FirebaseFirestore firebaseFirestore = FirebaseFirestore.instance;
 
   Future<void> createUserAccount(String email, String password, context) async {
     try {
-      log('dhafjkadh');
+      _isLoading = true;
+      notifyListeners();
       await auth
           .createUserWithEmailAndPassword(email: email, password: password)
           .then((value) async {
@@ -31,11 +33,14 @@ class FirebaseAuthSignUPProvider with ChangeNotifier {
             .doc(auth.currentUser!.uid)
             .set(userModel.toMap());
       });
-
+      _isLoading = false;
+      notifyListeners();
       ShowSnackBar()
           .showSnackBar(context, Colors.green, 'New user Creted Successfully');
       navigation(context);
     } on FirebaseAuthException catch (e) {
+      _isLoading = false;
+      notifyListeners();
       switch (e.code) {
         case 'invalid-email':
           return ShowSnackBar().showSnackBar(

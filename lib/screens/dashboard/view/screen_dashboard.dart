@@ -26,6 +26,7 @@ class ScreenDashBoard extends StatelessWidget {
         if (!snapshot.hasData) {
           return const ScreenLogin();
         }
+
         return Scaffold(
           floatingActionButton: FloatingActionButton(
             onPressed: () async {
@@ -66,17 +67,43 @@ class ScreenDashBoard extends StatelessWidget {
                           mainAxisAlignment: MainAxisAlignment.center,
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
-                            // ListView.separated(
-                            //     itemBuilder:(context, index) {
-                            //       return newUser.getAllUsers();
-                            //     },
-                            //     separatorBuilder: (context, index) {
-                            //       return Divider();
-                            //     },
-                            //     itemCount: )
                             Text(value.userModel?.name ?? "no name"),
                             Text(
                               (value.userModel?.email ?? ""),
+                            ),
+                            const SizedBox(
+                              height: 50,
+                            ),
+                            Consumer<AddNewUserProvider>(
+                              builder: (BuildContext context,
+                                  AddNewUserProvider value, Widget? child) {
+                                return value.detailsModel == null
+                                    ? const Center(
+                                        child: Text('No Data'),
+                                      )
+                                    : ListView.separated(
+                                        itemBuilder: (context, index) {
+                                          return ListTile(
+                                            leading: const CircleAvatar(
+                                              radius: 30,
+                                            ),
+                                            title: Text(value.detailsModel!.name
+                                                .toString()),
+                                            trailing: IconButton(
+                                              onPressed: () {},
+                                              icon: const Icon(Icons.delete),
+                                              color: Colors.red,
+                                            ),
+                                            onTap: () {},
+                                          );
+                                        },
+                                        separatorBuilder: (context, index) {
+                                          return const Divider();
+                                        },
+                                        itemCount:
+                                            value.detailsModel!.name!.length,
+                                      );
+                              },
                             ),
                           ],
                         );

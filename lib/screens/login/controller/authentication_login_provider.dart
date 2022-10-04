@@ -13,22 +13,23 @@ class FirebaseAuthLogInProvider with ChangeNotifier {
   UserModel? model;
   final user = FirebaseAuth.instance.currentUser;
 
-  bool isLoading = false;
+  bool _isLoading = false;
+  bool get isLoading => _isLoading;
 
   dynamic signInUserAccount(String email, String password, context,
       GlobalKey<FormState> formKeyLogIn) async {
     try {
       if (formKeyLogIn.currentState!.validate()) {
-        isLoading = true;
+        _isLoading = true;
         notifyListeners();
         await auth.signInWithEmailAndPassword(email: email, password: password);
-        isLoading = false;
+        _isLoading = false;
         notifyListeners();
         navigation(context);
         return Future.value('');
       }
     } on FirebaseAuthException catch (e) {
-      isLoading = false;
+      _isLoading = false;
       notifyListeners();
       switch (e.code) {
         case 'invalid-email':

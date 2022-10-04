@@ -17,7 +17,8 @@ class ProfileProvider with ChangeNotifier {
   File? image;
   bool imageVisibility = false;
   final formKey = GlobalKey<FormState>();
-
+  bool _isLoading = false;
+  bool get isLoading => _isLoading;
   String? downloadUrl;
   Future<void> getImage(ImageSource source) async {
     final pikImage = await ImagePicker().pickImage(
@@ -47,6 +48,7 @@ class ProfileProvider with ChangeNotifier {
     FirebaseAuth auth = FirebaseAuth.instance;
     try {
       await auth.signOut();
+      downloadUrl = null;
       Navigator.of(context).pushReplacement(
         MaterialPageRoute(
           builder: (ctx) => const ScreenLogin(),
@@ -69,18 +71,25 @@ class ProfileProvider with ChangeNotifier {
 
   void getProfileImage(String? userid) async {
     try {
+      _isLoading = true;
+      notifyListeners();
       Reference reference =
           FirebaseStorage.instance.ref().child('$userid/images');
       downloadUrl = await reference.getDownloadURL();
+      _isLoading = false;
       notifyListeners();
       log(downloadUrl!);
     } catch (e) {
+      _isLoading = false;
+      notifyListeners();
       log('getImageException${e.toString()}');
     }
   }
 
   Future<void> submitUpdate(String? userid, context) async {
     if (formKey.currentState!.validate()) {
+      _isLoading = true;
+      notifyListeners();
       if (image != null) {
         await uploeadPick(userid);
         notifyListeners();
@@ -95,9 +104,11 @@ class ProfileProvider with ChangeNotifier {
           .collection(auth.currentUser!.email.toString())
           .doc(auth.currentUser!.uid)
           .update(userModel.toMap());
+      _isLoading = false;
+      notifyListeners();
       notifyListeners();
       log('submit called');
-      Navigator.pop(context);
+      //  Navigator.pop(context);
     }
   }
 

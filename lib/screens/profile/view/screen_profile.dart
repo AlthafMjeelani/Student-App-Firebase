@@ -1,13 +1,9 @@
-import 'dart:developer';
 import 'dart:io';
-
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebaseaut/screens/dashboard/controller/dashboeard_provider.dart';
-import 'package:firebaseaut/screens/login/model/user_model.dart';
 import 'package:firebaseaut/screens/profile/controller/profile_controller.dart';
 import 'package:firebaseaut/utils/core/constent_widget.dart';
 import 'package:firebaseaut/widgets/textfeild_widget.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
@@ -27,11 +23,11 @@ class ScreenProfile extends StatelessWidget {
       if (dashboard.userModel == null) {
         return;
       } else {
-        data.downloadUrl = null;
         data.nameController.text = dashboard.userModel!.name.toString();
         data.emailController.text = dashboard.userModel!.email.toString();
         Provider.of<ProfileProvider>(context, listen: false)
             .getProfileImage(userId);
+        data.image = null;
       }
     });
     return Scaffold(
@@ -40,6 +36,7 @@ class ScreenProfile extends StatelessWidget {
           TextButton.icon(
             onPressed: () async {
               await data.signOutPage(context);
+              data.image = null;
             },
             icon: const Icon(
               Icons.logout,
@@ -66,45 +63,52 @@ class ScreenProfile extends StatelessWidget {
                 const SizedBox(
                   height: 30,
                 ),
-                GestureDetector(
-                  onTap: () {
-                    alertDialog(context);
-                  },
-                  child: Stack(
-                    children: [
-                      Consumer<ProfileProvider>(
-                        builder: (BuildContext context, ProfileProvider value,
-                            Widget? child) {
-                          return value.image == null
-                              ? const CircleAvatar(
-                                  backgroundColor: Colors.black38,
-                                  radius: 70,
-                                  child: Icon(Icons.image),
+                Consumer(
+                  builder: (BuildContext context, ProfileProvider value,
+                      Widget? child) {
+                    return value.isLoading
+                        ? const Padding(
+                            padding: EdgeInsets.only(left: 30, top: 20),
+                            child: CupertinoActivityIndicator(
+                              color: Colors.cyan,
+                            ))
+                        : GestureDetector(
+                            onTap: () {
+                              alertDialog(context);
+                            },
+                            child: Stack(
+                              children: [
+                                value.image == null
+                                    ? value.downloadUrl == null
+                                        ? const CircleAvatar(
+                                            backgroundColor: Colors.black38,
+                                            radius: 70,
+                                            child: Icon(Icons.image),
+                                          )
+                                        : CircleAvatar(
+                                            backgroundImage: NetworkImage(
+                                              value.downloadUrl!,
+                                            ),
+                                            radius: 70,
+                                          )
+                                    : CircleAvatar(
+                                        backgroundImage: FileImage(
+                                          File(value.image!.path),
+                                        ),
+                                        radius: 70,
+                                      ),
+                                const Padding(
+                                  padding:
+                                      EdgeInsets.only(top: 110.0, left: 100),
+                                  child: Icon(
+                                    Icons.camera_alt_outlined,
+                                    size: 32,
+                                  ),
                                 )
-                              : value.downloadUrl == null
-                                  ? CircleAvatar(
-                                      backgroundImage: FileImage(
-                                        File(value.image!.path),
-                                      ),
-                                      radius: 70,
-                                    )
-                                  : CircleAvatar(
-                                      backgroundImage: NetworkImage(
-                                        value.downloadUrl!,
-                                      ),
-                                      radius: 70,
-                                    );
-                        },
-                      ),
-                      const Padding(
-                        padding: EdgeInsets.only(top: 110.0, left: 100),
-                        child: Icon(
-                          Icons.camera_alt_outlined,
-                          size: 32,
-                        ),
-                      )
-                    ],
-                  ),
+                              ],
+                            ),
+                          );
+                  },
                 ),
                 ConstentWidget.kWidth32,
                 Textfeildwidget(
@@ -129,13 +133,22 @@ class ScreenProfile extends StatelessWidget {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    TextButton.icon(
-                      onPressed: () async {
-                        await data.submitUpdate(userId, context);
-                        await dashboard.getData();
+                    Consumer<ProfileProvider>(
+                      builder: (BuildContext context, value, Widget? child) {
+                        return value.isLoading
+                            ? const CupertinoActivityIndicator(
+                                color: Colors.cyan,
+                              )
+                            : TextButton.icon(
+                                onPressed: () async {
+                                  await data.submitUpdate(userId, context);
+                                  await dashboard.getData();
+                                },
+                                icon:
+                                    const Icon(Icons.app_registration_rounded),
+                                label: const Text('Save'),
+                              );
                       },
-                      icon: const Icon(Icons.app_registration_rounded),
-                      label: const Text('Save'),
                     ),
                   ],
                 ),
