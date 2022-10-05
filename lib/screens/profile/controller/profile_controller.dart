@@ -81,24 +81,24 @@ class ProfileProvider with ChangeNotifier {
     }
   }
 
-  Future<void> getData() async {
-    try {
-      _isgetLoading = true;
-      notifyListeners();
-      await FirebaseFirestore.instance
-          .collection(FirebaseAuth.instance.currentUser!.email.toString())
-          .doc(FirebaseAuth.instance.currentUser!.uid)
-          .get()
-          .then((value) {
-        userModel = UserModel.fromMap(value.data()!);
-        log(userModel.toString());
-      });
-      _isgetLoading = false;
-      notifyListeners();
-    } catch (e) {
-      log(e.toString());
-    }
-  }
+  // Future<void> getData() async {
+  //   try {
+  //     _isgetLoading = true;
+  //     notifyListeners();
+  //     await FirebaseFirestore.instance
+  //         .collection(FirebaseAuth.instance.currentUser!.email.toString())
+  //         .doc(FirebaseAuth.instance.currentUser!.uid)
+  //         .get()
+  //         .then((value) {
+  //       userModel = UserModel.fromMap(value.data()!);
+  //       log(userModel.toString());
+  //     });
+  //     _isgetLoading = false;
+  //     notifyListeners();
+  //   } catch (e) {
+  //     log(e.toString());
+  //   }
+  // }
 
   Future<void> submitUpdate(String? userid, context) async {
     if (formKey.currentState!.validate()) {

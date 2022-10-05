@@ -36,7 +36,7 @@ class ScreenProfile extends StatelessWidget {
 
         Provider.of<ProfileProvider>(context, listen: false)
             .getProfileImage(userId);
-        data.getData();
+        dashboard.getData();
         data.image = null;
         data.isEditing = false;
       }
@@ -151,7 +151,7 @@ class ScreenProfile extends StatelessWidget {
                   readOnly: false,
                   validator: (value) => data.phoneValidation(value),
                   text:
-                      dashboard.userModel!.mob.toString() != 'No Mobile Number'
+                      dashboard.userModel?.mob.toString() != 'No Mobile Number'
                           ? 'Mobile Number'
                           : 'No Mobile Number',
                   icon: Icons.abc,
@@ -186,7 +186,7 @@ class ScreenProfile extends StatelessWidget {
                             : TextButton.icon(
                                 onPressed: () async {
                                   await data.submitUpdate(userId, context);
-                                  data.getData();
+                                  dashboard.getData();
                                 },
                                 icon:
                                     const Icon(Icons.app_registration_rounded),

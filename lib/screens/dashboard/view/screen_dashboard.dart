@@ -15,7 +15,7 @@ class ScreenDashBoard extends StatelessWidget {
     final get = Provider.of<ProfileProvider>(context, listen: false);
     final newUser = Provider.of<AddNewUserProvider>(context, listen: false);
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
-      get.getData();
+      dash.getData();
       await newUser.getAllStudents(context);
     });
 

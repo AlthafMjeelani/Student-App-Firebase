@@ -22,6 +22,23 @@ class DashBoardProvider with ChangeNotifier {
     return null;
   }
 
+  Future<void> getData() async {
+    try {
+      notifyListeners();
+      await FirebaseFirestore.instance
+          .collection(FirebaseAuth.instance.currentUser!.email.toString())
+          .doc(FirebaseAuth.instance.currentUser!.uid)
+          .get()
+          .then((value) {
+        userModel = UserModel.fromMap(value.data()!);
+        log(userModel.toString());
+      });
+      notifyListeners();
+    } catch (e) {
+      log(e.toString());
+    }
+  }
+
   void navigationToAdd(
     context,
   ) {

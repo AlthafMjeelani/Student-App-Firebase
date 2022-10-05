@@ -18,7 +18,7 @@ class ScreenUserRegistration extends StatelessWidget {
       data.nameRegController.clear();
       data.passwordRegController.clear();
 
-      await Provider.of<ProfileProvider>(context, listen: false).getData();
+      await Provider.of<DashBoardProvider>(context, listen: false).getData();
     });
 
     return Scaffold(
