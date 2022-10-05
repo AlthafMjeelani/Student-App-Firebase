@@ -1,14 +1,34 @@
 import 'package:firebaseaut/screens/adduser/controller/add_newuser_provider.dart';
+import 'package:firebaseaut/screens/adduser/model/enum_model.dart';
+import 'package:firebaseaut/screens/adduser/model/user_details_model.dart';
 import 'package:firebaseaut/widgets/textfeild_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class ScreenAddUser extends StatelessWidget {
-  const ScreenAddUser({super.key});
+  const ScreenAddUser({
+    super.key,
+    required this.type,
+    this.student,
+  });
+  final ActionType type;
+  final DetailsModel? student;
 
   @override
   Widget build(BuildContext context) {
     final data = Provider.of<AddNewUserProvider>(context, listen: false);
+
+    if (type == ActionType.editscreen) {
+      data.nameController.text = student!.name.toString();
+      data.ageController.text = student!.age.toString();
+      data.domainController.text = student!.domain.toString();
+      data.mobController.text = student!.mobileNumber.toString();
+    } else {
+      data.nameController.clear();
+      data.ageController.clear();
+      data.domainController.clear();
+      data.mobController.clear();
+    }
     return Scaffold(
       appBar: AppBar(),
       body: SingleChildScrollView(
@@ -54,7 +74,7 @@ class ScreenAddUser extends StatelessWidget {
                 ),
                 Textfeildwidget(
                   readOnly: false,
-                  keyboardType: TextInputType.emailAddress,
+                  keyboardType: TextInputType.phone,
                   text: 'Mobile Number',
                   icon: Icons.numbers,
                   controller: data.mobController,
@@ -66,12 +86,19 @@ class ScreenAddUser extends StatelessWidget {
                 ),
                 TextButton.icon(
                   onPressed: () async {
-                    if (data.formKey.currentState!.validate()) {
-                      data.addNewUser(context);
+                    if (type == ActionType.editscreen) {
+                      data.updateStudents(student!.uid!, context);
+                      data.getAllStudents(context);
+                    } else {
+                      if (data.formKey.currentState!.validate()) {
+                        data.addNewUser(context);
+                        data.getAllStudents(context);
+                      }
                     }
                   },
                   icon: const Icon(Icons.app_registration_rounded),
-                  label: const Text('Register'),
+                  label:
+                      Text(type == ActionType.addScreen ? 'Register' : 'save'),
                 ),
               ],
             ),

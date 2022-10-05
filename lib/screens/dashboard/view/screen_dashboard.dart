@@ -1,6 +1,7 @@
 import 'dart:developer';
 import 'package:firebaseaut/screens/adduser/controller/add_newuser_provider.dart';
 import 'package:firebaseaut/screens/dashboard/controller/dashboeard_provider.dart';
+import 'package:firebaseaut/screens/profile/controller/profile_controller.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -10,10 +11,12 @@ class ScreenDashBoard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final newUser = Provider.of<AddNewUserProvider>(context, listen: false);
     final dash = Provider.of<DashBoardProvider>(context, listen: false);
-    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      dash.getData();
+    final get = Provider.of<ProfileProvider>(context, listen: false);
+    final newUser = Provider.of<AddNewUserProvider>(context, listen: false);
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
+      get.getData();
+      await newUser.getAllStudents(context);
     });
 
     return Scaffold(
@@ -42,52 +45,45 @@ class ScreenDashBoard extends StatelessWidget {
           ),
         ],
       ),
-      body: dash.isLoading
-          ? const Center(
-              child: CupertinoActivityIndicator(
-                color: Colors.cyan,
-              ),
-            )
-          : Padding(
-              padding: const EdgeInsets.all(2.0),
-              child: Column(
-                children: [
-                  StreamBuilder(
-                      stream: newUser.fetchAllStudents(),
-                      builder: (context, snapshot) {
-                        if (snapshot.connectionState ==
-                            ConnectionState.waiting) {
-                          return const Center(
-                            child: CupertinoActivityIndicator(
-                              color: Colors.cyan,
-                            ),
-                          );
-                        } else if (snapshot.data!.isEmpty) {
-                          return const Center(
-                            child: Text("No students"),
-                          );
-                        }
-                        return ListView.separated(
-                          scrollDirection: Axis.vertical,
-                          shrinkWrap: true,
-                          itemCount: snapshot.data!.length,
-                          itemBuilder: ((context, index) {
-                            final student = snapshot.data![index];
-                            return ListTile(
-                              leading: const CircleAvatar(
-                                radius: 30,
-                              ),
-                              title: Text(student.name.toString()),
-                            );
-                          }),
-                          separatorBuilder: (BuildContext context, int index) {
-                            return const Divider();
-                          },
-                        );
-                      }),
-                ],
-              ),
-            ),
+      body: Padding(
+        padding: const EdgeInsets.all(2.0),
+        child: Consumer<AddNewUserProvider>(
+          builder: (context, value, child) {
+            if (value.isLoading) {
+              return const Center(
+                child: CupertinoActivityIndicator(),
+              );
+            }
+            if (value.studentList.isEmpty) {
+              return const Center(
+                child: Text("No students"),
+              );
+            }
+            return ListView.separated(
+              scrollDirection: Axis.vertical,
+              shrinkWrap: true,
+              itemCount: value.studentList.length,
+              itemBuilder: (context, index) {
+                final student = value.studentList[index];
+                return ListTile(
+                  onTap: () {
+                    newUser.navigationToEdit(context, student);
+                  },
+                  leading: const CircleAvatar(
+                    radius: 30,
+                    backgroundImage: NetworkImage(
+                        'https://www.pngitem.com/pimgs/m/111-1114675_user-login-person-man-enter-person-login-icon.png'),
+                  ),
+                  title: Text(student.name.toString()),
+                );
+              },
+              separatorBuilder: (BuildContext context, int index) {
+                return const Divider();
+              },
+            );
+          },
+        ),
+      ),
     );
   }
 }

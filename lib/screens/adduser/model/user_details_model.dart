@@ -3,11 +3,13 @@ class DetailsModel {
   String? age;
   String? domain;
   String? mobileNumber;
+  String? uid;
   DetailsModel({
     this.name,
     this.age,
     this.domain,
     this.mobileNumber,
+    this.uid,
   });
 
   factory DetailsModel.fromMap(Map<String, dynamic> map) {
@@ -16,6 +18,7 @@ class DetailsModel {
       age: map['age'] ?? '',
       domain: map['domain'] ?? '',
       mobileNumber: map['mob'] ?? '',
+      uid: map['uid'] ?? '',
     );
   }
 
@@ -24,5 +27,6 @@ class DetailsModel {
         'age': age,
         'domain': domain,
         "mob": mobileNumber,
+        'uid': uid,
       };
 }

@@ -20,14 +20,23 @@ class ScreenProfile extends StatelessWidget {
     final data = Provider.of<ProfileProvider>(context, listen: false);
     final dashboard = Provider.of<DashBoardProvider>(context, listen: false);
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
+      // if (dashboard.userModel!.mob == "No Mobile Number") {
+      //   return;
+      // } else {
+      //   data.mobController.text = dashboard.userModel!.mob.toString();
+      // }
       if (dashboard.userModel == null) {
         return;
       } else {
         data.nameController.text = dashboard.userModel!.name.toString();
         data.emailController.text = dashboard.userModel!.email.toString();
-        // data.mobController.text = dashboard.userModel!.mob.toString();
+        data.mobController.text = dashboard.userModel!.mob == "No Mobile Number"
+            ? ''
+            : dashboard.userModel!.mob.toString();
+
         Provider.of<ProfileProvider>(context, listen: false)
             .getProfileImage(userId);
+        data.getData();
         data.image = null;
         data.isEditing = false;
       }
@@ -177,6 +186,7 @@ class ScreenProfile extends StatelessWidget {
                             : TextButton.icon(
                                 onPressed: () async {
                                   await data.submitUpdate(userId, context);
+                                  data.getData();
                                 },
                                 icon:
                                     const Icon(Icons.app_registration_rounded),

@@ -1,5 +1,6 @@
 import 'package:firebaseaut/screens/dashboard/controller/dashboeard_provider.dart';
 import 'package:firebaseaut/screens/login/controller/authentication_registration_provider.dart';
+import 'package:firebaseaut/screens/profile/controller/profile_controller.dart';
 import 'package:firebaseaut/utils/core/constent_widget.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -17,7 +18,7 @@ class ScreenUserRegistration extends StatelessWidget {
       data.nameRegController.clear();
       data.passwordRegController.clear();
 
-      await Provider.of<DashBoardProvider>(context, listen: false).getData();
+      await Provider.of<ProfileProvider>(context, listen: false).getData();
     });
 
     return Scaffold(
