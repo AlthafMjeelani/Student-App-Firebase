@@ -12,7 +12,6 @@ class ScreenDashBoard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final dash = Provider.of<DashBoardProvider>(context, listen: false);
-    final get = Provider.of<ProfileProvider>(context, listen: false);
     final newUser = Provider.of<AddNewUserProvider>(context, listen: false);
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
       dash.getData();

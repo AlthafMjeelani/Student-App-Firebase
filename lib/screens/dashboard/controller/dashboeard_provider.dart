@@ -11,8 +11,6 @@ import 'package:flutter/material.dart';
 class DashBoardProvider with ChangeNotifier {
   final TextEditingController firstNameRegController = TextEditingController();
   final TextEditingController ageRegController = TextEditingController();
-  bool _isLoading = false;
-  bool get isLoading => _isLoading;
   UserModel? userModel;
 
   String? validation(value, String text) {

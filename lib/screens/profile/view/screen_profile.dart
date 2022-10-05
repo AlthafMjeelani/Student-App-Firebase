@@ -20,11 +20,6 @@ class ScreenProfile extends StatelessWidget {
     final data = Provider.of<ProfileProvider>(context, listen: false);
     final dashboard = Provider.of<DashBoardProvider>(context, listen: false);
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
-      // if (dashboard.userModel!.mob == "No Mobile Number") {
-      //   return;
-      // } else {
-      //   data.mobController.text = dashboard.userModel!.mob.toString();
-      // }
       if (dashboard.userModel == null) {
         return;
       } else {

@@ -18,8 +18,6 @@ class ProfileProvider with ChangeNotifier {
   final formKey = GlobalKey<FormState>();
   bool _isLoading = false;
   bool get isLoading => _isLoading;
-  bool _isgetLoading = false;
-  bool get isgetLoading => _isgetLoading;
   UserModel? userModel;
 
   bool isEditing = false;

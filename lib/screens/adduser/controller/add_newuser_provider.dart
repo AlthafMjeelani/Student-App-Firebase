@@ -18,11 +18,11 @@ class AddNewUserProvider with ChangeNotifier {
   FirebaseAuth auth = FirebaseAuth.instance;
   DetailsModel? detailsModel;
   final formKey = GlobalKey<FormState>();
-  String uid = const Uuid().v4();
   bool isLoading = false;
   List<DetailsModel> studentList = [];
 
   void addNewUser(context) async {
+    String uid = const Uuid().v4();
     DetailsModel newUser = DetailsModel(
         name: nameController.text,
         age: ageController.text,
@@ -35,10 +35,12 @@ class AddNewUserProvider with ChangeNotifier {
         .doc(auth.currentUser!.uid)
         .collection('newUser')
         .doc(uid)
-        .set(newUser.toMap());
-    ShowSnackBar()
-        .showSnackBar(context, Colors.green, 'New user Creted Successfully');
-    Navigator.pop(context);
+        .set(newUser.toMap())
+        .then((value) {
+      ShowSnackBar()
+          .showSnackBar(context, Colors.green, 'New user Creted Successfully');
+      Navigator.pop(context);
+    });
   }
 
   String? validation(value, String text) {
@@ -48,25 +50,6 @@ class AddNewUserProvider with ChangeNotifier {
     return null;
   }
 
-  // Stream<List<DetailsModel>> fetchAllStudents() {
-  //   return FirebaseFirestore.instance
-  //       .collection(auth.currentUser!.email.toString())
-  //       .doc(auth.currentUser!.uid)
-  //       .collection('newUser')
-  //       .snapshots()
-  //       .asyncMap(
-  //     (event) async {
-  //       List<DetailsModel> students = [];
-  //       for (var element in event.docs) {
-  //         final st = DetailsModel.fromMap(element.data());
-  //         students.add(st);
-  //         notifyListeners();
-  //       }
-  //       return students;
-  //     },
-  //   );
-  // }
-
   Future<void> getAllStudents(context) async {
     try {
       isLoading = true;
@@ -75,10 +58,10 @@ class AddNewUserProvider with ChangeNotifier {
           .doc(auth.currentUser!.uid)
           .collection('newUser')
           .get();
-
+      studentList = [];
       List<QueryDocumentSnapshot<Map<String, dynamic>>> documentList =
           studentCollection.docs;
-      studentList = [];
+
       for (var element in documentList) {
         final studentData = DetailsModel.fromMap(element.data());
 

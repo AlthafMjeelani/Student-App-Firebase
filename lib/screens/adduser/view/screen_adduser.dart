@@ -88,11 +88,11 @@ class ScreenAddUser extends StatelessWidget {
                   onPressed: () async {
                     if (type == ActionType.editscreen) {
                       data.updateStudents(student!.uid!, context);
-                      data.getAllStudents(context);
+                      await data.getAllStudents(context);
                     } else {
                       if (data.formKey.currentState!.validate()) {
                         data.addNewUser(context);
-                        data.getAllStudents(context);
+                        await data.getAllStudents(context);
                       }
                     }
                   },
