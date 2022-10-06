@@ -121,4 +121,26 @@ class AddNewUserProvider with ChangeNotifier {
       //  Navigator.pop(context);
     }
   }
+
+  Future<void> deleteStudent(String uid, context) async {
+    try {
+      isLoading = true;
+      log('called');
+      await FirebaseFirestore.instance
+          .collection(auth.currentUser!.email.toString())
+          .doc(auth.currentUser!.uid)
+          .collection('newUser')
+          .doc(uid)
+          .delete();
+      isLoading = false;
+      notifyListeners();
+    } on FirebaseException catch (e) {
+      isLoading = false;
+      log(e.toString());
+    } catch (e) {
+      isLoading = false;
+      log(e.toString());
+    }
+    notifyListeners();
+  }
 }

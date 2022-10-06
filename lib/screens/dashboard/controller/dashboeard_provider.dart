@@ -12,6 +12,8 @@ class DashBoardProvider with ChangeNotifier {
   final TextEditingController firstNameRegController = TextEditingController();
   final TextEditingController ageRegController = TextEditingController();
   UserModel? userModel;
+  FirebaseAuth auth = FirebaseAuth.instance;
+  bool isLoading = false;
 
   String? validation(value, String text) {
     if (value == null || value.isEmpty) {
@@ -58,4 +60,6 @@ class DashBoardProvider with ChangeNotifier {
       ),
     );
   }
+
+ 
 }

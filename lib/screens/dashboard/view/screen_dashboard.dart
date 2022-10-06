@@ -1,7 +1,6 @@
 import 'dart:developer';
 import 'package:firebaseaut/screens/adduser/controller/add_newuser_provider.dart';
 import 'package:firebaseaut/screens/dashboard/controller/dashboeard_provider.dart';
-import 'package:firebaseaut/screens/profile/controller/profile_controller.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -48,14 +47,14 @@ class ScreenDashBoard extends StatelessWidget {
         padding: const EdgeInsets.all(2.0),
         child: Consumer<AddNewUserProvider>(
           builder: (context, value, child) {
-            if (value.isLoading) {
-              return const Center(
-                child: CupertinoActivityIndicator(),
-              );
-            }
             if (value.studentList.isEmpty) {
               return const Center(
                 child: Text("No students"),
+              );
+            }
+            if (value.isLoading) {
+              return const Center(
+                child: CupertinoActivityIndicator(),
               );
             }
             return ListView.separated(
@@ -74,6 +73,15 @@ class ScreenDashBoard extends StatelessWidget {
                         'https://www.pngitem.com/pimgs/m/111-1114675_user-login-person-man-enter-person-login-icon.png'),
                   ),
                   title: Text(student.name.toString()),
+                  trailing: IconButton(
+                    onPressed: () async {
+                      value.deleteStudent(student.uid.toString(), context);
+                      await value.getAllStudents(context);
+                    },
+                    icon: const Icon(
+                      Icons.delete,
+                    ),
+                  ),
                 );
               },
               separatorBuilder: (BuildContext context, int index) {
